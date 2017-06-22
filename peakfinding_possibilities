@@ -1,0 +1,41 @@
+# Additional peak finding functions
+# Run this after running master_threads so test_data is in the workspace
+
+data <- test_data
+head(data)
+
+# turnpoints in pastecs library:
+library(pastecs)
+peaks <- turnpoints(data[,"load"])
+summary(peaks)
+str(peaks) # look at the structure of peaks
+plot(data$extension, data$load, pch = ".")
+points(data$extension[peaks$peaks], data$load[peaks$peaks], col = "green")
+points(data$extension[peaks$pits], data$load[peaks$pits], col = "red")
+
+# issue is that I still need a del
+
+peakfn <- function (x, thresh = .001) 
+{
+  x <- data$load
+  thresh = .001
+  length(data$load)
+  length(diff(x, na.pad = FALSE))
+  
+  x_data <- data$extension[1:length(data$extension)-1]
+  y_data <- diff(x, na.pad = FALSE)
+  plot(x_data,y_data, pch = '.')
+  
+  pks <- which(diff(sign(diff(x, na.pad = FALSE)), na.pad = FALSE) < 0) + 2
+  plot(x[pks - 1] - x[pks])
+  peaks_x <- (x[pks - 1] - x[pks]) > thresh
+  peaks_ext <- (data$extension[pks - 1] - data$extension[pks]) > thresh
+  plot(peaks_ext, peaks_x)
+  return(pks)
+}
+
+peaks_loc <- peakfn(data$load, thresh =.1)
+peaks <- cbind(data$extension[peaks_loc], data$load[peaks_loc])
+head(peaks)
+plot(data$extension, data$load, pch = ".")
+points(peaks[,1], peaks[,2], pch = 21)
