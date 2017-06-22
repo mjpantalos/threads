@@ -52,4 +52,3 @@ test_peaks<-FindPeaks(points=test_data_xy, MagPre=0.2, MagPost=-0.2)
 plot(test_data_xy, pch=".")
 plot(test_data_xy, pch=".", xlim=c(9,9.25), ylim=c(0.25, 0.3))
 points(test_peaks, pch=16)
-
