@@ -1,0 +1,9 @@
+#======
+# Determine specimen label
+#======
+setwd("~/Documents/School and jobs/UW Biology/Research/Summer 2016/TEMPXFOOD_Roberts_2016/data/thread testing/instron_extension_load/161104")
+
+data_1 <- read.csv(file = "Specimen_RawData_7.csv", header = TRUE,
+                   stringsAsFactors = FALSE, skip = 0)
+head(data_1)
+specimen_label <- data_1[1,1] 
