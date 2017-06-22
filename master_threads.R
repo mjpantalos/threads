@@ -1,7 +1,8 @@
 #======
 # Determine specimen label
 #======
-# Make sure working directory is set
+# Make sure working directory is set for .csv file. 
+# If cloning directly from github, .csv file is already in working directory.
 
 data_1 <- read.csv(file = "Specimen_RawData_7.csv", header = TRUE,
                    stringsAsFactors = FALSE, skip = 0)
