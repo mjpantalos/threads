@@ -53,3 +53,36 @@ test_peaks<-FindPeaks(points=test_data_xy, MagPre=0.2, MagPost=-0.2)
 plot(test_data_xy, pch=".")
 plot(test_data_xy, pch=".", xlim=c(9,9.25), ylim=c(0.25, 0.3))
 points(test_peaks, pch=16)
+
+
+#LowRes: reduce the number of points by taking mean
+LowRes<-function(load_data, dx=1){
+ #find the number of points in new dataset having dx milimeters between each point
+ numnewpoints<-trunc(max(load_data$extension)/dx)
+ #create dataframe for point reduction
+ newpoints<-data.frame(extension=rep(0, numnewpoints), load=rep(0, numnewpoints))
+ #number of points in interval dx
+ numpoints<-length(load_data$extension)/numnewpoints
+ #defining needed variables for loop
+ extenmean<-NULL
+ loadmean<-NULL
+ #loop for processing remaining data
+ for(i in 1:numnewpoints){
+  #finding mean extension during interval i
+  extenmean<-mean(load_data$extension[((i-1)*numpoints+1):(i*numpoints)])
+  #finding mean load during interval i
+  loadmean<-mean(load_data$load[((i-1)*numpoints+1):(i*numpoints)])
+  #adding mean extension and load for interval i to newpoints
+  newpoints$extention[i]<-extenmean
+  newpoints$load[i]<-loadmean
+ }
+ return(newpoints)
+}
+
+
+
+
+
+
+
+
