@@ -87,7 +87,7 @@ plot(data_1$load~data_1$extension, pch=".")
 points(data_1_low, pch=16, cex=0.5)
 
 #FindPeaks_2: finds points with preceding slope greater than PreS and following slope less than PostS
-FindPeaks_2<-function(load_data, PreS=1, PostS=-1){
+FindPeaks_2<-function(load_data, PreS=0, PostS=-1){
   x1<-NULL
   x2<-NULL
   x3<-NULL
@@ -130,3 +130,9 @@ FindPeaks_2<-function(load_data, PreS=1, PostS=-1){
   return(peaks)
 }
 
+
+data_1_low_peaks<-FindPeaks_2(load_data=data_1_low, PreS=0, PostS=-1)
+
+plot(data_1$load~data_1$extension, pch=".")
+points(data_1_low, pch=16, cex=0.5)
+points(data_1_low_peaks, pch=16, cex=1)
