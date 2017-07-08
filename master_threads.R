@@ -38,6 +38,47 @@ LowRes<-function(load_data, dx=1){
   newpoints$load[i]<-loadmean
  }
  return(newpoints)
+  
+ #determines peaks by considering each point, if the slope preceeding it is positive then conciders if the next consecneg following slopes between points are negative and then if the magnitude of the negative slope from first to last point is greater than minmag; returns dataframe of points that fulfill all three criteria; points is a dataframe with colmuns "extension" and "load", consecneg is the minimum number of negative slopes following a peak, minmag is the minimum magnitude for the total negative slope.
+ FindPeaks<-function(points, consecneg=5, minmag=30){
+	
+	#data frame for all peaks
+	peaks<-data.frame(extension=c(0), load=c(0))
+	#object for keeping track of repeat loop
+	n<-0
+	#object for keeping track of number for TRUE values from first if in subloop
+	numneg<-0
+	
+	#main loop, starts on second point, considers slope leading to consecneg following points
+	for(i in 2:(length(points$extension)-consecneg)){
+		numneg<-0
+		n<-i
+		#determine if preceeding slope is positive (preceding point less than point being considered)
+		if(points$load[i]>points$load[i-1]){
+			#determine if the next consecneg slopes between points are negative (each point is greater that the one following it)
+			repeat{
+				#checks if point n is greater than following point
+				if(points$load[n]>points$load[n+1]){
+					#records slope as negative if so
+					numneg<-numneg+1
+					#checks if it is the last slope to consider, breaks loop is so
+					if(numneg==consecneg){break}
+				#breaks loop if slope is not negative
+				}else{break}
+				n<-n+1
+			}
+			#if there are consecneg negative slops following the point being considered, and the magnitude of the negative slope between first and last point in those slopes is greater than minmag, the point is added to the list of peaks
+			slopemag<-points$load[i]-points$load[(i+consecneg)]
+			if(numneg==consecneg & slopemag>=minmag){
+				#if it is the first peak, sets first row of peaks to point's cooredinates
+				if(peaks$extension[1]==0){ peaks$extension[1]<-points$extension[i]; peaks$load[1]<-points$load[i]
+				#if not, binds point's coordinates to bottom row of peaks
+				}else{peaks<-rbind(peaks, data.frame(extension=points$extension[i], load=points$load[i]))}
+			}
+		}
+	}
+	return(peaks)
+}
 }
 
 
